@@ -1,0 +1,11 @@
+{
+    "payload": {
+        "query": "query marvelCharacters($filters: CharacterFilters) {\n  characters(filters: $filters) {\n    result {\n      name\n      id\n      type\n      species\n    }\n  }\n}\n",
+        "variables": {
+            "filters": {
+                "species": "Marvel"
+            }
+        }
+    },
+    "response": "{\"data\":{\"characters\":{\"result\":[{\"name\":\"THOR\",\"id\":151,\"type\":\"hero\",\"species\":\"Marvel\"},{\"name\":\"THOR\",\"id\":152,\"type\":\"hero\",\"species\":\"Marvel\"},{\"name\":\"Mike1\",\"id\":14874,\"type\":\"hero\",\"species\":\"Marvel\"},{\"name\":\"Mike1\",\"id\":14875,\"type\":\"hero\",\"species\":\"Marvel\"},{\"name\":\"MikeVar\",\"id\":14877,\"type\":\"hero\",\"species\":\"Marvel\"},{\"name\":\"MikeVar\",\"id\":14878,\"type\":\"hero\",\"species\":\"Marvel\"},{\"name\":\"MikeVar\",\"id\":14891,\"type\":\"hero\",\"species\":\"Marvel\"},{\"name\":\"MikeVar\",\"id\":14892,\"type\":\"hero\",\"species\":\"Marvel\"},{\"name\":\"MikeVar\",\"id\":14895,\"type\":\"hero\",\"species\":\"Marvel\"}]}}}"
+}

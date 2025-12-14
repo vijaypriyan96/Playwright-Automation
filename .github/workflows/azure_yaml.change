@@ -1,0 +1,111 @@
+# =========================
+# 🔹 Playwright Test Pipeline
+# =========================
+
+# No CI trigger — manual only
+trigger: none
+
+# =========================
+# Example schedules:
+# "0 3 * * *" → every day at 3 AM
+# "0 */6 * * *" → every 6 hours
+# "0 9 * * 1" → every Monday at 9 AM
+#
+# always: true ensures the schedule runs regardless of recent commits.
+# =========================
+schedules:
+  - cron: "0 0 * * 1-5" # runs at 00:00 (midnight) Monday–Friday
+    displayName: "Weekday Midnight Run"
+    branches:
+      include:
+        - main # only trigger for 'main' branch
+    always: true
+
+# Runtime parameters (shown as inputs on manual run)
+parameters:
+  - name: browser
+    displayName: "Browser for Playwright tests"
+    type: string
+    default: "chromium"
+    values:
+      - chromium
+      - firefox
+      - webkit
+
+  - name: environment
+    displayName: "Target Environment"
+    type: string
+    default: "staging"
+    values:
+      - dev
+      - staging
+      - prod
+
+  - name: headless
+    displayName: "Run headless?"
+    type: boolean
+    default: true
+
+# Pull variables and secrets
+variables:
+  # Normal variable
+  - name: NODE_ENV
+    value: "test"
+
+  # 👇 Option 1: Use a Variable Group (defined in ADO Library)
+  - group: Playwright-Secrets
+
+  # 👇 Option 2: (Optional) Link to Azure Key Vault (if configured in Library)
+  - name: kv-secrets
+    value: "AzureKeyVaultServiceConnection"
+
+pool:
+  vmImage: "ubuntu-latest"
+
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: "20.x"
+    displayName: "Use Node.js 20"
+
+  - script: |
+      npm ci
+    displayName: "Install dependencies"
+
+  - script: |
+      echo "Running Playwright tests"
+      echo "Environment: ${{ parameters.environment }}"
+      echo "Browser: ${{ parameters.browser }}"
+      echo "Headless: ${{ parameters.headless }}"
+      echo "Using secret: $(API_TOKEN)"
+
+      npx playwright install --with-deps
+      npx playwright test \
+        --project=${{ parameters.browser }} \
+        --config=playwright.config.ts \
+        --reporter=junit \
+        --output=playwright-report \
+        --headed=${{ not(parameters.headless) }}
+    displayName: "Run Playwright Tests"
+    env:
+      ENVIRONMENT: ${{ parameters.environment }}
+      BROWSER: ${{ parameters.browser }}
+      HEADLESS: ${{ parameters.headless }}
+      NODE_ENV: $(NODE_ENV)
+      API_TOKEN: $(API_TOKEN) # Secret variable from variable group or Key Vault
+      DB_PASSWORD: $(DB_PASSWORD) # Another secret example
+
+  - task: PublishTestResults@2
+    condition: succeededOrFailed()
+    inputs:
+      testResultsFormat: "JUnit"
+      testResultsFiles: "$(System.DefaultWorkingDirectory)/**/*.xml"
+      failTaskOnFailedTests: true
+    displayName: "Publish Playwright Test Results"
+
+  - task: PublishBuildArtifacts@1
+    condition: always()
+    inputs:
+      PathtoPublish: "playwright-report"
+      ArtifactName: "PlaywrightReport"
+    displayName: "Publish Playwright HTML Report"

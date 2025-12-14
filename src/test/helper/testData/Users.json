@@ -1,0 +1,14 @@
+{
+    "defaultUser" : "username1",
+    "password" : "Qwerty1234",
+    "users":[
+        {
+            "username1": "username1",
+            "password1": "Qwerty1234"
+        },
+        {
+            "username2": "username2",
+            "password2": "Qwerty1234"
+        }
+    ]
+}

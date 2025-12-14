@@ -1,0 +1,15 @@
+{
+    "payload": {
+        "query": "query Locations($filters: LocationFilters, $pagination: Pagination) {\n  locations(filters: $filters, pagination: $pagination) {\n    result {\n      name\n      id\n      type\n      dimension\n    }\n  }\n}\n",
+        "variables": {
+            "filters": {
+                "type": "Europe"
+            },
+            "pagination": {
+                "limit": 5,
+                "page": 1
+            }
+        }
+    },
+    "response": "{\"data\":{\"locations\":{\"result\":[{\"name\":\"Sweden\",\"id\":107,\"type\":\"Europe\",\"dimension\":\"1234\"},{\"name\":\"Sweden\",\"id\":117,\"type\":\"Europe\",\"dimension\":\"1234\"},{\"name\":\"Australia\",\"id\":125,\"type\":\"Europe\",\"dimension\":\"1234\"},{\"name\":\"Australia\",\"id\":127,\"type\":\"Europe\",\"dimension\":\"1234\"},{\"name\":\"Australia\",\"id\":141,\"type\":\"Europe\",\"dimension\":\"1234\"}]}}}"
+}

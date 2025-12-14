@@ -1,0 +1,7 @@
+{
+    "payload": {
+        "query": "mutation creatingNewLocation($location: LocationCreate ) {\n  createLocation(location: $location) {\n    id\n  }\n}\n",
+        "variables": { "location": {"name": "Bengaluru", "type": "India", "dimension": "Karnataka"}}
+    },
+    "response": "{\"data\":{\"createLocations\":{\"id\":\"${id}\"}}}"
+}

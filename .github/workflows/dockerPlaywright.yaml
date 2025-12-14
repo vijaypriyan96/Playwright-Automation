@@ -1,0 +1,53 @@
+name: Playwright Tests
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    timeout-minutes: 60
+    # Change the runner to a Linux environment as Docker is typically easier to use here
+    runs-on: ubuntu-latest
+    
+    # Configure the Docker image to use for all steps in this job
+    container: 
+      image: karthik0k0bhat/cucmber_playwright:latest
+      # Optional: Set the working directory inside the container if it's not the default
+      # options: --workdir /github/workspace 
+
+    steps:
+    - uses: actions/checkout@v4
+      # Note: The checkout step needs to run *outside* the container 
+      # to clone the code before the container starts. 
+      # However, for jobs using the 'container' property, 
+      # the checkout action is often omitted or configured differently, 
+      # as the entire job runs inside the container, and the repository is 
+      # typically mapped or available. Assuming your Docker image 
+      # already contains all necessary dependencies and the environment 
+      # is set up to run tests directly, we'll keep the steps minimal.
+      # If your image *doesn't* contain the code, you might need to adjust.
+      
+    # Since the Docker image is expected to have Node, Playwright, and dependencies installed,
+    # the setup-node, npm ci, and playwright install steps are removed.
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run Playwright tests
+      # Pass the required environment variables explicitly
+      env:
+        # Maps GitHub variable to the npm_config format your local run uses
+        npm_config_ENV: ${{ vars.WEBSITE }} 
+        npm_config_TAGS: ${{ vars.TAGS }}
+      
+      # Now, the 'npm test' command can be simpler
+      run: npm test
+
+    - uses: actions/upload-artifact@v4
+      if: ${{ !cancelled() }}
+      with:
+        name: playwright-report
+        path: test-results/
+        retention-days: 30

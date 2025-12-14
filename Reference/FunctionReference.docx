@@ -1,0 +1,42 @@
+Commonly Used newContext Options
+Option	Description & Example
+viewport	Sets the viewport size. <br> { width: 1280, height: 720 } or null for window size.
+recordVideo	Records video of the session. <br> { dir: 'videos/', size: { width: 1280, height: 720 } }
+userAgent	Sets a custom user agent string. <br> 'MyCustomAgent/1.0'
+locale	Sets browser language/locale. <br> 'en-US', 'fr-FR'
+timezoneId	Sets browser timezone. <br> 'America/New_York'
+geolocation	Sets geolocation. <br> { longitude: 12.4924, latitude: 41.8902 }
+permissions	Sets permissions for the context. <br> [ 'geolocation', 'notifications' ]
+colorScheme	Sets color scheme. <br> 'light', 'dark', 'no-preference'
+acceptDownloads	Enables file downloads. <br> true
+httpCredentials	Sets HTTP authentication. <br> { username: 'user', password: 'pass' }
+storageState	Loads cookies/localStorage. <br> { cookies: [...], origins: [...] } or path to JSON file
+extraHTTPHeaders	Sets additional HTTP headers. <br> { 'X-My-Header': 'value' }
+deviceScaleFactor	Sets device scale factor (DPI). <br> 2 for Retina screens
+isMobile	Emulates mobile device. <br> true
+hasTouch	Enables touch events. <br> true
+userDataDir	Sets a persistent context directory (for stateful sessions).
+proxy	Sets a proxy server. <br> { server: 'http://myproxy.com:3128' }
+javaScriptEnabled	Enables/disables JavaScript. <br> false to disable
+offline	Simulates offline mode. <br> true
+recordHar	Records HTTP Archive (HAR) for network traffic. <br> { path: 'network.har' }
+
+
+const context = await browser.newContext({
+  viewport: { width: 1280, height: 720 },
+  recordVideo: { dir: 'videos/', size: { width: 1280, height: 720 } },
+  userAgent: 'MyCustomAgent/1.0',
+  locale: 'fr-FR',
+  timezoneId: 'Europe/Paris',
+  geolocation: { longitude: 2.3522, latitude: 48.8566 },
+  permissions: ['geolocation'],
+  colorScheme: 'dark',
+  acceptDownloads: true,
+  httpCredentials: { username: 'admin', password: 'secret' },
+  extraHTTPHeaders: { 'X-Test-Header': 'Playwright' },
+  deviceScaleFactor: 2,
+  isMobile: false,
+  hasTouch: false,
+  offline: false,
+  recordHar: { path: 'network.har' }
+});
